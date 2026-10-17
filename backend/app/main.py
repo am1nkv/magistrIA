@@ -8,11 +8,12 @@ load_dotenv()
 
 from fastapi import BackgroundTasks, FastAPI, HTTPException, UploadFile  # noqa: E402
 from fastapi.middleware.cors import CORSMiddleware  # noqa: E402
-from fastapi.responses import FileResponse  # noqa: E402
+from fastapi.responses import FileResponse, Response  # noqa: E402
 
 from . import db  # noqa: E402
 from .extract import extract_pages  # noqa: E402
-from .llm import llm_configure  # noqa: E402
+from .export_pdf import synthese_pdf  # noqa: E402
+from .llm import llm_configure, nom_modele, ollama_modeles, provider  # noqa: E402
 from .pipeline import analyser  # noqa: E402
 from .priorite import criteres  # noqa: E402
 
@@ -24,7 +25,8 @@ app.add_middleware(CORSMiddleware, allow_origins=["http://localhost:5173"], allo
 @app.get("/api/status")
 def status():
     return {"llm": llm_configure(), "mode": os.getenv("MAGISTRIA_MODE") or "normal",
-            "modele": os.getenv("AZURE_AI_MODEL")}
+            "fournisseur": provider(), "modele": nom_modele(),
+            "ollama_modeles": ollama_modeles() if provider() == "ollama" else []}
 
 
 async def _enregistrer(dossier_id: int, files: list[UploadFile]) -> None:
@@ -150,3 +152,14 @@ def fichier(doc_id: int):
         raise HTTPException(404)
     return FileResponse(doc["path"], media_type="application/pdf",
                         filename=doc["filename"], content_disposition_type="inline")
+
+
+@app.get("/api/dossiers/{dossier_id}/synthese.pdf")
+def synthese(dossier_id: int):
+    """Fiche de synthèse standardisée, 4 pages A4 maximum."""
+    d = db.dossier(dossier_id)
+    if not d or not d["fiche"]:
+        raise HTTPException(404, "Aucune fiche disponible pour ce dossier")
+    pdf = synthese_pdf(d["fiche"])
+    return Response(pdf, media_type="application/pdf",
+                    headers={"Content-Disposition": f'inline; filename="synthese-dossier-{dossier_id}.pdf"'})

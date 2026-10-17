@@ -25,7 +25,9 @@ RÈGLES ABSOLUES
 7. Plusieurs jeux de conclusions d'une même partie : les moyens et prétentions de cette partie sont ceux des DERNIÈRES
    conclusions (récapitulatives si elles existent). Les actes antérieurs figurent dans la frise de la procédure.
 8. Dates au format AAAA-MM-JJ quand elles sont complètes. Si une information est absente : null ou liste vide. N'invente rien.
-9. Réponds UNIQUEMENT avec un objet JSON valide, sans texte autour, en français.
+9. Concision : la fiche finale doit tenir sur 4 pages A4 au plus. Phrases courtes (≤ 40 mots par élément),
+   au plus 6 moyens et 6 prétentions par partie, 10 faits, 10 événements de frise, 15 textes, 20 pièces.
+10. Réponds UNIQUEMENT avec un objet JSON valide, sans texte autour, en français.
 """
 
 SCHEMA_EXEMPLE = """{

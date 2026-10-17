@@ -54,6 +54,7 @@ export default function Fiche({ id }) {
         </div>
         <div className="head-side">
           {f?.matiere && <span className="tag big">{f.matiere}</span>}
+          {f && <a className="link" href={`/api/dossiers/${d.id}/synthese.pdf`} target="_blank" rel="noreferrer">Exporter la synthèse (PDF, 4 p. max)</a>}
           {d.resume.priorite_motifs.length > 0 && (
             <div className="small">Priorité n° {d.resume.priorite_rang ?? '—'} : {d.resume.priorite_motifs.join(' · ')}</div>
           )}

@@ -30,6 +30,12 @@ La fiche s'affiche dans un tableau de bord **trié selon des critères procédur
 | Prescription / recevabilité | Présentées comme « points de vigilance procédurale » (dates utiles, texte invoqué, délai), avec « à vérifier par le magistrat ». L'outil ne conclut jamais. |
 | Validation humaine systématique | Toute fiche porte le statut « brouillon IA — à valider ». |
 
+## Modèle local (Ollama)
+
+Aucune donnée ne quitte la machine : `ollama pull llama3.2` (ou `qwen2.5:14b`, `mistral-nemo`…), puis dans `backend/.env` :
+`LLM_PROVIDER=ollama`, `OLLAMA_MODEL=<modèle>`. `GET /api/status` indique le fournisseur et les modèles installés.
+Export standardisé : `GET /api/dossiers/{id}/synthese.pdf` (A4, 4 pages maximum, bouton « Exporter la synthèse »).
+
 ## Lancer le projet
 
 Prérequis : Python 3.11+ et Node 18+.
